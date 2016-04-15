@@ -41,6 +41,8 @@ while ( my $st = $srv->fetchrow_hashref() ) {
 
 plotHashes($names,$especialitat);
 
+$dbh->disconnect();
+
 sub plotHashes {
   my $names = shift;
   my $especialitat = shift;
@@ -80,23 +82,3 @@ sub dumpHash {
   close(DAT);
 }
 
-$dbh->disconnect();
-
-sub plot {
-  my $hash = shift;
-  open(DAT,">dat/tmp.dat");
-  foreach my $key ( sort { $a <=> $b } %{$hash} ) {
-    print DAT "$key\t$hash->{$key}\n";
-  }
-  close(DAT);
-  open(PLT,">dat/tmp.plt");
-  print PLT <<EOF;
-set xrange[-5000:100000]
-set terminal postscript enhanced color
-set output "histogram.eps"
-plot "dat/tmp.dat" with impulses lw 30
-EOF
-  close(PLT);
-  system("gnuplot dat/tmp.plt");
-  system("convert -rotate 90 histogram.eps histogram.png");
-}
