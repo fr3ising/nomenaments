@@ -1,0 +1,24 @@
+Scripts per construïr base de dades nomenaments ensenyament
+i exemple de representació gràfica de histograma de freqüències
+de nomenaments per servei territorial i especialitat.
+
+Com fer-ho servir:
+
+git clone https://github.com/fr3ising/nomenaments.git
+
+mkdir files
+mkdir dat
+perl download.pl
+perl qaf_db.pl
+
+perl qaf_xpl.pl [CODI ESPECIALITAT] <- Opcional
+
+Dependències de:
+
+- Statistics::Descriptive al CPAN
+- Gnuplot
+- DBI::SQlite
+
+
+
+

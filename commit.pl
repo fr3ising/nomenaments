@@ -9,4 +9,5 @@ foreach my $arg ( @ARGV ) {
 }
 
 system("git add *.pl\n");
+system("git add README\n");
 system("git commit -m '$name'\n");
