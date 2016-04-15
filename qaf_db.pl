@@ -160,7 +160,7 @@ sub convertDate {
 
 sub createDatabase {
   my $filename = shift;
-  system("rm -rf $filename");
+  system("rm $filename");
   my $dbh = DBI->connect("dbi:SQLite:dbname=$filename","","");
 
   my $especialitats = <<EOF;
