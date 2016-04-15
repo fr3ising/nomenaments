@@ -18,6 +18,8 @@ Dependències de:
 - Statistics::Descriptive al CPAN
 - Gnuplot
 - DBI::SQlite
+- curl
+- LWP::UserAgent
 
 
 
