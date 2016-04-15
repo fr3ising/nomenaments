@@ -3,7 +3,6 @@
 use strict;
 
 use DBI;
-use Statistics::Histogram;
 use Statistics::Descriptive;
 
 my $especialitat = shift @ARGV;
