@@ -104,25 +104,6 @@ sub parseFile {
   @nomenaments;
 }
 
-sub insertNomenament {
-  my $nom = shift;
-  my $dbh = shift;
-  if ( $nom->{nOrdre} !~ m/\d/ ) {
-    return;
-  }
-  my $sth = $dbh->prepare("SELECT id FROM serveis WHERE st=?;");
-  $sth->execute($nom->{servei});
-  my $st = $sth->fetchrow_hashref();
-  $sth = $dbh->prepare("INSERT OR IGNORE INTO centres (nom,servei) VALUES (?,?);");
-  $sth->execute($nom->{nomCentre},$st->{id});
-  $dbh->commit();
-  my $sth = $dbh->prepare("SELECT id FROM centres WHERE nom=?;");
-  $sth->execute($nom->{nomCentre});
-  my $st = $sth->fetchrow_hashref();
-  my $centreId = $st->{id};
-  print "$centreId\n";
-}
-
 sub parseRow {
   my $row = shift;
   my @array = split(/<\/td><td>/,$row);
