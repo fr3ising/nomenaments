@@ -56,7 +56,6 @@ set encoding iso_8859_1
 set terminal postscript enhanced color
 set output "histogram.eps"
 set samples 10
-set arrow from 72000,0 to 72000,300
 set xlabel "Número d'ordre a la borsa"
 set ylabel "Freqüència de Nomenaments"
 set title "Freqüència nomenaments segons àrea territorial 2015/2016 ($especialitat)"

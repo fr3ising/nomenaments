@@ -11,7 +11,12 @@ mkdir dat
 perl download.pl
 perl qaf_db.pl
 
+La última comanda genera una base de dades sqlite anomenada qaf.db
+
 perl qaf_xpl.pl [CODI ESPECIALITAT] <- Opcional
+
+Aquesta comanda genera un fitxer histogram.png amb la distribució
+de freqüències
 
 Dependències de:
 
@@ -20,6 +25,7 @@ Dependències de:
 - DBI::SQlite
 - curl
 - LWP::UserAgent
+- Imagemagick
 
 
 
