@@ -47,7 +47,7 @@ foreach my $nom ( @nomenaments ) {
   my $eh = $especialitatQuery->fetchrow_hashref();
   $especialitatQuery->finish();
   $nomenamentInsert->execute($nom->{nOrdre},
-			     $nom->{nDate},
+			     "$nom->{nDate} 00:00:00",
 			     $nom->{nStart},
 			     $nom->{nEnd},
 			     $nom->{jornada},

@@ -7,6 +7,8 @@ use Statistics::Descriptive;
 
 my $especialitat = shift @ARGV;
 my $yearmonth = shift @ARGV;
+my $nyearmonth = shift @ARGV;
+my $output = shift @ARGV;
 
 my $year = 0;
 my $month = 0;
@@ -24,6 +26,11 @@ if ( $yearmonth ) {
   }
 }
 
+if ( $nyearmonth ) {
+  ($nyear,$nmonth) = $nyearmonth =~ m/(\d\d\d\d)(\d\d)/;
+}
+
+
 my $dbfilename = "qaf.db";
 
 my $dbh = DBI->connect("dbi:SQLite:dbname=$dbfilename","","",{AutoCommit => 0});
@@ -35,13 +42,14 @@ my $names = {};
 while ( my $st = $srv->fetchrow_hashref() ) {
   my $query = "SELECT * FROM nomenaments WHERE centre IN (SELECT id FROM centres WHERE servei = (SELECT id FROM serveis WHERE st=?));";
   if ( $year && $month ) {
-    $query = "SELECT * FROM nomenaments WHERE  nDate >= \"$year-$month-01\" AND nDate <= \"$nyear-$nmonth-01\" AND centre IN (SELECT id FROM centres WHERE servei = (SELECT id FROM serveis WHERE st=?));";
+    $query = "SELECT * FROM nomenaments WHERE  nDate >= \"$year-$month-01 00:00:00\" AND nDate <= \"$nyear-$nmonth-01 00:00:00\" AND centre IN (SELECT id FROM centres WHERE servei = (SELECT id FROM serveis WHERE st=?));";
+    print "$query\n\n";
   }
   my $sth = $dbh->prepare($query);
   if ( $especialitat ) {
     $query = "SELECT * FROM nomenaments WHERE especialitat IN (SELECT id FROM especialitats WHERE codi=?) AND centre IN (SELECT id FROM centres WHERE servei = (SELECT id FROM serveis WHERE st=?));";
     if ( $year && $month ) {
-      $query = "SELECT * FROM nomenaments WHERE nDate >= \"$year-$month-01\" AND nDate <= \"$nyear-$nmonth-01\" AND especialitat IN (SELECT id FROM especialitats WHERE codi=?) AND centre IN (SELECT id FROM centres WHERE servei = (SELECT id FROM serveis WHERE st=?));";
+      $query = "SELECT * FROM nomenaments WHERE nDate >= \"$year-$month-01 00:00:00\" AND nDate <= \"$nyear-$nmonth-01 00:00:00\" AND especialitat IN (SELECT id FROM especialitats WHERE codi=?) AND centre IN (SELECT id FROM centres WHERE servei = (SELECT id FROM serveis WHERE st=?));";
     }
     $sth = $dbh->prepare($query);
     $sth->execute($especialitat,$st->{st});
@@ -67,6 +75,10 @@ plotHashes($names,$especialitat);
 
 $dbh->disconnect();
 
+if ( $output ) {
+  system("mv histogram.png $output");
+}
+
 sub plotHashes {
   my $names = shift;
   my $especialitat = shift;
@@ -78,6 +90,7 @@ sub plotHashes {
   open(PLT,">dat/tmp.plt");
   print PLT <<EOF;
 set xrange[000:100000]
+set yrange[000:1000]
 set encoding iso_8859_1
 set terminal postscript enhanced color
 set output "histogram.eps"
@@ -95,6 +108,9 @@ EOF
 sub dumpHash {
   my $hash = shift;
   my $st = shift;
+  unless ( $hash ) {
+    return;
+  }
   open(DAT,">dat/$st.dat");
   foreach my $key ( sort { $a <=> $b } %{$hash} ) {
     if ( $hash->{$key} ) {
