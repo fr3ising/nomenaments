@@ -6,6 +6,23 @@ use DBI;
 use Statistics::Descriptive;
 
 my $especialitat = shift @ARGV;
+my $yearmonth = shift @ARGV;
+
+my $year = 0;
+my $month = 0;
+my $nmonth = 0;
+my $nyear = 0;
+
+if ( $yearmonth ) {
+  ($year,$month) = $yearmonth =~ m/(\d\d\d\d)(\d\d)/;
+  if ( $month < 12 ) {
+    $nmonth = sprintf("%02d",$month+1);
+    $nyear = $year;
+  } else {
+    $nmonth = "01";
+    $nyear = sprintf("%d",$year+1);
+  }
+}
 
 my $dbfilename = "qaf.db";
 
@@ -16,9 +33,17 @@ my $srv = $dbh->prepare("SELECT * FROM serveis");
 $srv->execute();
 my $names = {};
 while ( my $st = $srv->fetchrow_hashref() ) {
-  my $sth = $dbh->prepare("SELECT * FROM nomenaments WHERE centre IN (SELECT id FROM centres WHERE servei = (SELECT id FROM serveis WHERE st=?));");
+  my $query = "SELECT * FROM nomenaments WHERE centre IN (SELECT id FROM centres WHERE servei = (SELECT id FROM serveis WHERE st=?));";
+  if ( $year && $month ) {
+    $query = "SELECT * FROM nomenaments WHERE  nDate >= \"$year-$month-01\" AND nDate <= \"$nyear-$nmonth-01\" AND centre IN (SELECT id FROM centres WHERE servei = (SELECT id FROM serveis WHERE st=?));";
+  }
+  my $sth = $dbh->prepare($query);
   if ( $especialitat ) {
-    $sth = $dbh->prepare("SELECT * FROM nomenaments WHERE especialitat IN (SELECT id FROM especialitats WHERE codi=?) AND centre IN (SELECT id FROM centres WHERE servei = (SELECT id FROM serveis WHERE st=?));");
+    $query = "SELECT * FROM nomenaments WHERE especialitat IN (SELECT id FROM especialitats WHERE codi=?) AND centre IN (SELECT id FROM centres WHERE servei = (SELECT id FROM serveis WHERE st=?));";
+    if ( $year && $month ) {
+      $query = "SELECT * FROM nomenaments WHERE nDate >= \"$year-$month-01\" AND nDate <= \"$nyear-$nmonth-01\" AND especialitat IN (SELECT id FROM especialitats WHERE codi=?) AND centre IN (SELECT id FROM centres WHERE servei = (SELECT id FROM serveis WHERE st=?));";
+    }
+    $sth = $dbh->prepare($query);
     $sth->execute($especialitat,$st->{st});
   } else {
     $sth->execute($st->{st});
