@@ -1,0 +1,9 @@
+# output files & folders
+dat/
+files/
+histogram.eps
+histogram.png
+qaf.db
+
+# cpanm
+cpanm
