@@ -1,5 +1,5 @@
-Scripts per construïr una base de dades de nomenaments d'ensenyament
-i exemple de representació gràfica d'un histograma de freqüències
+Scripts per construir una base de dades de nomenaments d'ensenyament
+i exemple de representaciÃ³ grÃ fica d'un histograma de freqÃ¼Ã¨ncies
 de nomenaments per servei territorial i especialitat.
 
 Com fer-lo servir:
@@ -15,10 +15,10 @@ La darrera comanda genera una base de dades sqlite anomenada qaf.db
 
 perl qaf_xpl.pl [CODI ESPECIALITAT] <- Opcional
 
-Aquesta comanda genera un fitxer histogram.png amb la distribució
-de freqüències representada gràficament.
+Aquesta comanda genera un fitxer histogram.png amb la distribuciÃ³
+de freqÃ¼Ã¨ncies representada grÃ ficament.
 
-Dependències de:
+DependÃ¨ncies de:
 
 - Statistics::Descriptive al CPAN
 - Gnuplot
@@ -26,7 +26,3 @@ Dependències de:
 - curl
 - LWP::UserAgent
 - Imagemagick
-
-
-
-
